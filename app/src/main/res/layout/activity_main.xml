@@ -61,21 +61,21 @@
                     android:id="@+id/slot1_top"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/diamond" />
 
                 <ImageView
                     android:id="@+id/slot2_top"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/diamond" />
 
                 <ImageView
                     android:id="@+id/slot3_top"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/diamond" />
             </LinearLayout>
 
             <!-- Middle row of slots -->
@@ -90,24 +90,25 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/slot1"
+                    android:id="@+id/slot1_middle"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/seven" />
 
                 <ImageView
-                    android:id="@+id/slot2"
+                    android:id="@+id/slot2_middle"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/seven" />
 
                 <ImageView
-                    android:id="@+id/slot3"
+                    android:id="@+id/slot3_middle"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/seven" />
+
             </LinearLayout>
 
             <!-- Bottom row of slots -->
@@ -125,21 +126,21 @@
                     android:id="@+id/slot1_bottom"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/lemon" />
 
                 <ImageView
                     android:id="@+id/slot2_bottom"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/lemon" />
 
                 <ImageView
                     android:id="@+id/slot3_bottom"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/lemon" />
             </LinearLayout>
 
             <!-- Spin button below all slots -->
@@ -184,7 +185,7 @@
     <LinearLayout
         android:id="@+id/money_won_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/background_container"
         android:layout_centerHorizontal="true"
         android:gravity="center"
