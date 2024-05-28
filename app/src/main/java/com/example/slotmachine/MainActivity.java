@@ -1,13 +1,17 @@
 package com.example.slotmachine;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        slots = new ImageView[] {
+        slots = new ImageView[]{
                 findViewById(R.id.slot1_top), findViewById(R.id.slot2_top), findViewById(R.id.slot3_top),
                 findViewById(R.id.slot1_middle), findViewById(R.id.slot2_middle), findViewById(R.id.slot3_middle),
                 findViewById(R.id.slot1_bottom), findViewById(R.id.slot2_bottom), findViewById(R.id.slot3_bottom)
@@ -62,31 +66,54 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void addBet(){
+    private void addBet() {
         currentBet += 0.25;
         updateBetText();
     }
 
-    private void subtractBet(){
-        currentBet -= 0.25;
-        updateBetText();
+    private void subtractBet() {
+        if (currentBet >= 0.25) {
+            currentBet -= 0.25;
+            updateBetText();
+        }
     }
 
-    private void updateBetText(){
+    private void updateBetText() {
         currentBetTextView.setText("Current Bet: " + currentBet + "$");
     }
 
     private void spinSlots() {
         spinButton.setEnabled(false);
+
+        for (final ImageView slot : slots) {
+            ObjectAnimator animator = ObjectAnimator.ofFloat(slot, "rotationY", 0f, 360f);
+            animator.setDuration(1000); // 1 second for each spin
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.start();
+        }
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                for (ImageView slot : slots) {
+                int[] middleRowImages = new int[3];
+                for (int i = 0; i < slots.length; i++) {
                     int imageIndex = random.nextInt(images.length);
-                    slot.setImageResource(images[imageIndex]);
+                    slots[i].setImageResource(images[imageIndex]);
+                    // Save the middle row images
+                    if (i >= 3 && i < 6) {
+                        middleRowImages[i - 3] = imageIndex;
+                    }
                 }
                 spinButton.setEnabled(true);
+                checkWin(middleRowImages);
             }
         }, 1000); // 1 second delay to simulate spinning
+    }
+
+    private void checkWin(int[] middleRowImages) {
+        if (middleRowImages[0] == middleRowImages[1] && middleRowImages[1] == middleRowImages[2]) {
+            Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
+            // Implement the winning logic here, e.g., updating the balance
+        }
     }
 }
