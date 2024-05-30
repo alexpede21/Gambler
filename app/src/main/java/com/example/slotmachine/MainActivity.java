@@ -11,12 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private double currentBet = 0;
+    private double moneyWon = 0;
     private TextView currentBetTextView;
+    private TextView moneyWonTextView;
 
     private ImageView[] slots;
     private Button spinButton;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         minusButton = findViewById(R.id.minusButton);
 
         currentBetTextView = findViewById(R.id.current_bet);
+        moneyWonTextView = findViewById(R.id.money_won);
+
 
         spinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,9 +114,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkWin(int[] middleRowImages) {
+
         if (middleRowImages[0] == middleRowImages[1] && middleRowImages[1] == middleRowImages[2]) {
-            Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
-            // Implement the winning logic here, e.g., updating the balance
+            moneyWon = currentBet * 3;
+            moneyWonTextView.setText("Money Won: " + moneyWon + "$");
+        }
+        else if (middleRowImages[0] == middleRowImages[1] || middleRowImages[1] == middleRowImages[2]) {
+            moneyWon = currentBet / 2;
+            moneyWonTextView.setText("Money Won: " + moneyWon + "$");
+        } else {
+            moneyWonTextView.setText("NO Money WON");
         }
     }
 }
