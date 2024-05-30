@@ -131,20 +131,17 @@ public class MainActivity extends AppCompatActivity {
                         animator.start();
 
                         // Change the image at intervals during the spin
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int i = 0; i < 10; i++) {
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            int imageIndex = random.nextInt(images.length);
-                                            slots[index].setImageResource(images[imageIndex]);
-                                        }
-                                    }, i * interval);
+                        for (int i = 0; i < duration / interval; i++) {
+                            final int iteration = i;
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int imageIndex = random.nextInt(images.length);
+                                    slots[index].setImageResource(images[imageIndex]);
+                                    slotImages[index] = imageIndex;
                                 }
-                            }
-                        }, duration / 2);
+                            }, iteration * interval);
+                        }
                     }
                 }
             }, col * (duration / 3));
@@ -154,12 +151,6 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int[] slotImages = new int[slots.length];
-                for (int i = 0; i < slots.length; i++) {
-                    int imageIndex = random.nextInt(images.length);
-                    slots[i].setImageResource(images[imageIndex]);
-                    slotImages[i] = imageIndex;
-                }
                 spinButton.setEnabled(true);
                 checkWin(slotImages);
             }
@@ -167,20 +158,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkWin(int[] slotImages) {
-
         if (currentBet == 0) {
             moneyWonTextView.setText("No bets");
             return;
         }
-
-        // Extract rows and columns
-        int[] topRow = {slotImages[0], slotImages[1], slotImages[2]};
-        int[] middleRow = {slotImages[3], slotImages[4], slotImages[5]};
-        int[] bottomRow = {slotImages[6], slotImages[7], slotImages[8]};
-        int[] leftColumn = {slotImages[0], slotImages[3], slotImages[6]};
-        int[] middleColumn = {slotImages[1], slotImages[4], slotImages[7]};
-        int[] rightColumn = {slotImages[2], slotImages[5], slotImages[8]};
-
         boolean isWin = false;
         double winMultiplier = 0;
 
@@ -203,34 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break; // If any line is a win, we can break out of the loop
             }
-            if (bottomRow[0] == bottomRow[1] && bottomRow[1] == bottomRow[2]) {
-                applyGlowEffect(slots[6]);
-                applyGlowEffect(slots[7]);
-                applyGlowEffect(slots[8]);
-            }
-        }
-
-        // Check vertical lines
-        if ((leftColumn[0] == leftColumn[1] && leftColumn[1] == leftColumn[2]) ||
-                (middleColumn[0] == middleColumn[1] && middleColumn[1] == middleColumn[2]) ||
-                (rightColumn[0] == rightColumn[1] && rightColumn[1] == rightColumn[2])) {
-            isWin = true;
-            winMultiplier = 3;
-            if (leftColumn[0] == leftColumn[1] && leftColumn[1] == leftColumn[2]) {
-                applyGlowEffect(slots[0]);
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[6]);
-            }
-            if (middleColumn[0] == middleColumn[1] && middleColumn[1] == middleColumn[2]) {
-                applyGlowEffect(slots[1]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[7]);
-            }
-            if (rightColumn[0] == rightColumn[1] && rightColumn[1] == rightColumn[2]) {
-                applyGlowEffect(slots[2]);
-                applyGlowEffect(slots[5]);
-                applyGlowEffect(slots[8]);
-            }
         }
 
         // Check 2x2 blocks
@@ -246,18 +199,6 @@ public class MainActivity extends AppCompatActivity {
                     applyGlowEffect(slots[index]);
                 }
                 break; // If any block is a win, we can break out of the loop
-            }
-            if (slotImages[3] == slotImages[4] && slotImages[4] == slotImages[6] && slotImages[6] == slotImages[7]) {
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[6]);
-                applyGlowEffect(slots[7]);
-            }
-            if (slotImages[4] == slotImages[5] && slotImages[5] == slotImages[7] && slotImages[7] == slotImages[8]) {
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[5]);
-                applyGlowEffect(slots[7]);
-                applyGlowEffect(slots[8]);
             }
         }
 
