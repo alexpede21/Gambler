@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.animate().alpha(1f).setDuration(duration).start();
             }
         }).start();
-        
+
     }
 
     private void updateBetText() {
@@ -143,22 +143,16 @@ public class MainActivity extends AppCompatActivity {
             isWin = true;
             winMultiplier = 3;
             if (topRow[0] == topRow[1] && topRow[1] == topRow[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[0]);
                 applyGlowEffect(slots[1]);
                 applyGlowEffect(slots[2]);
             }
             if (middleRow[0] == middleRow[1] && middleRow[1] == middleRow[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[5]);
             }
             if (bottomRow[0] == bottomRow[1] && bottomRow[1] == bottomRow[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[6]);
                 applyGlowEffect(slots[7]);
                 applyGlowEffect(slots[8]);
@@ -172,22 +166,16 @@ public class MainActivity extends AppCompatActivity {
             isWin = true;
             winMultiplier = 3;
             if (leftColumn[0] == leftColumn[1] && leftColumn[1] == leftColumn[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[0]);
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[6]);
             }
             if (middleColumn[0] == middleColumn[1] && middleColumn[1] == middleColumn[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[1]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[7]);
             }
             if (rightColumn[0] == rightColumn[1] && rightColumn[1] == rightColumn[2]) {
-                isWin = true;
-                winMultiplier = 3;
                 applyGlowEffect(slots[2]);
                 applyGlowEffect(slots[5]);
                 applyGlowEffect(slots[8]);
@@ -202,32 +190,24 @@ public class MainActivity extends AppCompatActivity {
             isWin = true;
             winMultiplier = 4;
             if (slotImages[0] == slotImages[1] && slotImages[1] == slotImages[3] && slotImages[3] == slotImages[4]) {
-                isWin = true;
-                winMultiplier = 4;
                 applyGlowEffect(slots[0]);
                 applyGlowEffect(slots[1]);
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[4]);
             }
             if (slotImages[1] == slotImages[2] && slotImages[2] == slotImages[4] && slotImages[4] == slotImages[5]) {
-                isWin = true;
-                winMultiplier = 4;
                 applyGlowEffect(slots[1]);
                 applyGlowEffect(slots[2]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[5]);
             }
             if (slotImages[3] == slotImages[4] && slotImages[4] == slotImages[6] && slotImages[6] == slotImages[7]) {
-                isWin = true;
-                winMultiplier = 4;
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[6]);
                 applyGlowEffect(slots[7]);
             }
             if (slotImages[4] == slotImages[5] && slotImages[5] == slotImages[7] && slotImages[7] == slotImages[8]) {
-                isWin = true;
-                winMultiplier = 4;
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[5]);
                 applyGlowEffect(slots[7]);
@@ -240,15 +220,11 @@ public class MainActivity extends AppCompatActivity {
             isWin = true;
             winMultiplier = 5;
             if (topRow[1] == middleRow[0] && middleRow[0] == middleRow[2]) {
-                isWin = true;
-                winMultiplier = 5;
                 applyGlowEffect(slots[1]);
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[5]);
             }
             if (bottomRow[1] == middleRow[0] && middleRow[0] == middleRow[2]) {
-                isWin = true;
-                winMultiplier = 5;
                 applyGlowEffect(slots[7]);
                 applyGlowEffect(slots[3]);
                 applyGlowEffect(slots[5]);
@@ -261,15 +237,11 @@ public class MainActivity extends AppCompatActivity {
             isWin = true;
             winMultiplier = 6;
             if (slotImages[0] == slotImages[4] && slotImages[4] == slotImages[8]) {  // top-left to bottom-right
-                isWin = true;
-                winMultiplier = 6;
                 applyGlowEffect(slots[0]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[8]);
             }
             if (slotImages[2] == slotImages[4] && slotImages[4] == slotImages[6]) {  // top-right to bottom-left
-                isWin = true;
-                winMultiplier = 6;
                 applyGlowEffect(slots[2]);
                 applyGlowEffect(slots[4]);
                 applyGlowEffect(slots[6]);
