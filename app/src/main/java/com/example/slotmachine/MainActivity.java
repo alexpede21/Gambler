@@ -17,6 +17,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     private double currentBet = 0;
     private double moneyWon = 0;
+    private boolean spin = true;
     private TextView currentBetTextView;
     private TextView moneyWonTextView;
 
@@ -24,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private Button spinButton;
     private Button plusButton;
     private Button minusButton;
-    private int[] images = {R.drawable.bar, R.drawable.cherry, R.drawable.diamond, R.drawable.lemon,
-            R.drawable.orange, R.drawable.seven};
+    private int[] images = {R.drawable.cherry, R.drawable.diamond, R.drawable.lemon,
+            R.drawable.orange, R.drawable.seven, R.drawable.apple, R.drawable.banana, R.drawable.bell,
+            R.drawable.crown, R.drawable.grape, R.drawable.horse, R.drawable.leaf, R.drawable.olive,
+            R.drawable.strawberry, R.drawable.watermelon};
     private Random random = new Random();
     private Handler handler = new Handler();
 
@@ -100,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void spinSlots() {
+
+        if (currentBet == 0) {
+            moneyWonTextView.setText("No bets");
+            return;
+        }
         spinButton.setEnabled(false);
 
         for (final ImageView slot : slots) {
@@ -125,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkWin(int[] slotImages) {
+
+        if (currentBet == 0) {
+            moneyWonTextView.setText("No bets");
+            return;
+        }
+
         // Extract rows and columns
         int[] topRow = {slotImages[0], slotImages[1], slotImages[2]};
         int[] middleRow = {slotImages[3], slotImages[4], slotImages[5]};

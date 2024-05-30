@@ -32,6 +32,6 @@ public class StartActivity extends AppCompatActivity {
     private void changeToSlot(){
         setContentView(R.layout.activity_main);
         //Intent intent = new Intent(getApplicationContext(), );
-        //startActivity(intent);
+        //startActivity(intent);,
     }
 }
