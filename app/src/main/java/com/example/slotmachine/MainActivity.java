@@ -102,17 +102,50 @@ public class MainActivity extends AppCompatActivity {
     private void spinSlots() {
         spinButton.setEnabled(false);
 
-        for (final ImageView slot : slots) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(slot, "rotationY", 0f, 360f);
-            animator.setDuration(1000); // 1 second for each spin
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+        // Array to hold the final images for each slot
+        final int[] slotImages = new int[slots.length];
+
+        // Define the spin duration and delay between spins
+        final long duration = 1000; // 1 second for each spin
+        final long interval = 100; // Interval to update images during the spin
+
+        // Spin each column with a delay between them to make it more seamless
+        for (int col = 0; col < 3; col++) {
+            final int finalCol = col;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int row = 0; row < 3; row++) {
+                        int index = finalCol + row * 3;
+                        ObjectAnimator animator = ObjectAnimator.ofFloat(slots[index], "rotationX", 0f, 360f);
+                        animator.setDuration(duration);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.start();
+
+                        // Change the image at intervals during the spin
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < 10; i++) {
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            int imageIndex = random.nextInt(images.length);
+                                            slots[index].setImageResource(images[imageIndex]);
+                                        }
+                                    }, i * interval);
+                                }
+                            }
+                        }, duration / 2);
+                    }
+                }
+            }, col * (duration / 3));
         }
 
+        // Update the slot images at the end of the total spin duration plus the last delay
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int[] slotImages = new int[slots.length];
                 for (int i = 0; i < slots.length; i++) {
                     int imageIndex = random.nextInt(images.length);
                     slots[i].setImageResource(images[imageIndex]);
@@ -121,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 spinButton.setEnabled(true);
                 checkWin(slotImages);
             }
-        }, 1000); // 1 second delay to simulate spinning
+        }, duration + (2 * (duration / 3)));
     }
 
     private void checkWin(int[] slotImages) {
