@@ -110,13 +110,47 @@ public class MainActivity extends AppCompatActivity {
         }
         spinButton.setEnabled(false);
 
-        for (final ImageView slot : slots) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(slot, "rotationY", 0f, 360f);
-            animator.setDuration(1000); // 1 second for each spin
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+        // Array to hold the final images for each slot
+        final int[] slotImages = new int[slots.length];
+
+        // Define the spin duration and delay between spins
+        final long duration = 1000; // 1 second for each spin
+        final long interval = 100; // Interval to update images during the spin
+
+        // Spin each column with a delay between them to make it more seamless
+        for (int col = 0; col < 3; col++) {
+            final int finalCol = col;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int row = 0; row < 3; row++) {
+                        int index = finalCol + row * 3;
+                        ObjectAnimator animator = ObjectAnimator.ofFloat(slots[index], "rotationX", 0f, 360f);
+                        animator.setDuration(duration);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.start();
+
+                        // Change the image at intervals during the spin
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < 10; i++) {
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            int imageIndex = random.nextInt(images.length);
+                                            slots[index].setImageResource(images[imageIndex]);
+                                        }
+                                    }, i * interval);
+                                }
+                            }
+                        }, duration / 2);
+                    }
+                }
+            }, col * (duration / 3));
         }
 
+        // Update the slot images at the end of the total spin duration plus the last delay
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -129,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 spinButton.setEnabled(true);
                 checkWin(slotImages);
             }
-        }, 1000); // 1 second delay to simulate spinning
+        }, duration + (2 * (duration / 3)));
     }
 
     private void checkWin(int[] slotImages) {
@@ -150,21 +184,24 @@ public class MainActivity extends AppCompatActivity {
         boolean isWin = false;
         double winMultiplier = 0;
 
-        // Check horizontal lines
-        if ((topRow[0] == topRow[1] && topRow[1] == topRow[2]) ||
-                (middleRow[0] == middleRow[1] && middleRow[1] == middleRow[2]) ||
-                (bottomRow[0] == bottomRow[1] && bottomRow[1] == bottomRow[2])) {
-            isWin = true;
-            winMultiplier = 3;
-            if (topRow[0] == topRow[1] && topRow[1] == topRow[2]) {
-                applyGlowEffect(slots[0]);
-                applyGlowEffect(slots[1]);
-                applyGlowEffect(slots[2]);
-            }
-            if (middleRow[0] == middleRow[1] && middleRow[1] == middleRow[2]) {
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[5]);
+        int[][] lines = {
+                // Rows
+                {0, 1, 2}, {3, 4, 5}, {6, 7, 8},
+                // Columns
+                {0, 3, 6}, {1, 4, 7}, {2, 5, 8},
+                // Diagonals
+                {0, 4, 8}, {2, 4, 6}
+        };
+
+        // Check horizontal, vertical, and diagonal lines
+        for (int[] line : lines) {
+            if (slotImages[line[0]] == slotImages[line[1]] && slotImages[line[1]] == slotImages[line[2]]) {
+                isWin = true;
+                winMultiplier = (line.length == 3) ? 3 : 6; // 3 for rows/columns, 6 for diagonals
+                for (int index : line) {
+                    applyGlowEffect(slots[index]);
+                }
+                break; // If any line is a win, we can break out of the loop
             }
             if (bottomRow[0] == bottomRow[1] && bottomRow[1] == bottomRow[2]) {
                 applyGlowEffect(slots[6]);
@@ -197,23 +234,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Check 2x2 blocks
-        if ((slotImages[0] == slotImages[1] && slotImages[1] == slotImages[3] && slotImages[3] == slotImages[4]) ||
-                (slotImages[1] == slotImages[2] && slotImages[2] == slotImages[4] && slotImages[4] == slotImages[5]) ||
-                (slotImages[3] == slotImages[4] && slotImages[4] == slotImages[6] && slotImages[6] == slotImages[7]) ||
-                (slotImages[4] == slotImages[5] && slotImages[5] == slotImages[7] && slotImages[7] == slotImages[8])) {
-            isWin = true;
-            winMultiplier = 4;
-            if (slotImages[0] == slotImages[1] && slotImages[1] == slotImages[3] && slotImages[3] == slotImages[4]) {
-                applyGlowEffect(slots[0]);
-                applyGlowEffect(slots[1]);
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[4]);
-            }
-            if (slotImages[1] == slotImages[2] && slotImages[2] == slotImages[4] && slotImages[4] == slotImages[5]) {
-                applyGlowEffect(slots[1]);
-                applyGlowEffect(slots[2]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[5]);
+        int[][] blocks = {
+                {0, 1, 3, 4}, {1, 2, 4, 5}, {3, 4, 6, 7}, {4, 5, 7, 8}
+        };
+
+        for (int[] block : blocks) {
+            if (slotImages[block[0]] == slotImages[block[1]] && slotImages[block[1]] == slotImages[block[2]] && slotImages[block[2]] == slotImages[block[3]]) {
+                isWin = true;
+                winMultiplier = 4;
+                for (int index : block) {
+                    applyGlowEffect(slots[index]);
+                }
+                break; // If any block is a win, we can break out of the loop
             }
             if (slotImages[3] == slotImages[4] && slotImages[4] == slotImages[6] && slotImages[6] == slotImages[7]) {
                 applyGlowEffect(slots[3]);
@@ -228,45 +260,28 @@ public class MainActivity extends AppCompatActivity {
                 applyGlowEffect(slots[8]);
             }
         }
-        // Check special condition: middle of top or bottom row same as left and right of middle row
-        if ((topRow[1] == middleRow[0] && middleRow[0] == middleRow[2]) ||
-                (bottomRow[1] == middleRow[0] && middleRow[0] == middleRow[2])) {
+
+        // Check special condition
+        if ((slotImages[1] == slotImages[3] && slotImages[3] == slotImages[5]) ||
+                (slotImages[7] == slotImages[3] && slotImages[3] == slotImages[5])) {
             isWin = true;
             winMultiplier = 5;
-            if (topRow[1] == middleRow[0] && middleRow[0] == middleRow[2]) {
-                applyGlowEffect(slots[1]);
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[5]);
-            }
-            if (bottomRow[1] == middleRow[0] && middleRow[0] == middleRow[2]) {
-                applyGlowEffect(slots[7]);
-                applyGlowEffect(slots[3]);
-                applyGlowEffect(slots[5]);
-            }
-
-        }
-        // Check diagonal lines
-        if ((slotImages[0] == slotImages[4] && slotImages[4] == slotImages[8]) ||  // top-left to bottom-right
-                (slotImages[2] == slotImages[4] && slotImages[4] == slotImages[6])) {  // top-right to bottom-left
-            isWin = true;
-            winMultiplier = 6;
-            if (slotImages[0] == slotImages[4] && slotImages[4] == slotImages[8]) {  // top-left to bottom-right
-                applyGlowEffect(slots[0]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[8]);
-            }
-            if (slotImages[2] == slotImages[4] && slotImages[4] == slotImages[6]) {  // top-right to bottom-left
-                applyGlowEffect(slots[2]);
-                applyGlowEffect(slots[4]);
-                applyGlowEffect(slots[6]);
+            int[] specialSlots = (slotImages[1] == slotImages[3]) ? new int[]{1, 3, 5} : new int[]{7, 3, 5};
+            for (int index : specialSlots) {
+                applyGlowEffect(slots[index]);
             }
         }
 
         // Check 3x3 block
-        if (slotImages[0] == slotImages[1] && slotImages[1] == slotImages[2] &&
-                slotImages[2] == slotImages[3] && slotImages[3] == slotImages[4] &&
-                slotImages[4] == slotImages[5] && slotImages[5] == slotImages[6] &&
-                slotImages[6] == slotImages[7] && slotImages[7] == slotImages[8]) {
+        boolean is3x3Win = true;
+        for (int i = 1; i < 9; i++) {
+            if (slotImages[i] != slotImages[0]) {
+                is3x3Win = false;
+                break;
+            }
+        }
+
+        if (is3x3Win) {
             isWin = true;
             winMultiplier = 10;
             for (ImageView slot : slots) {
@@ -274,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
+        // Display win/loss message
         if (isWin) {
             moneyWon = currentBet * winMultiplier;
             moneyWonTextView.setText("Money Won: " + moneyWon + "$");
@@ -282,4 +297,5 @@ public class MainActivity extends AppCompatActivity {
             moneyWonTextView.setText("NO Money WON");
         }
     }
+
 }
